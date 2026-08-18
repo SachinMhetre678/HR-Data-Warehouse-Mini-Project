@@ -217,6 +217,18 @@ class Transformer:
             how="left",
         )
 
+        # App-added employees are not in the Kaggle CSV — use OLTP status + neutral defaults.
+        missing_attrs = fact["is_attrition_flag"].isna()
+        if missing_attrs.any():
+            fact.loc[missing_attrs, "is_attrition_flag"] = (
+                fact.loc[missing_attrs, "status"].str.lower().eq("terminated")
+            )
+            fact.loc[missing_attrs, "job_satisfaction"] = 3
+            fact.loc[missing_attrs, "work_life_balance"] = 3
+            fact.loc[missing_attrs, "overtime"] = False
+            fact.loc[missing_attrs, "performance_rating"] = 3
+            fact.loc[missing_attrs, "distance_from_home"] = 0
+
         hire_dates = pd.to_datetime(fact["hire_date"]).dt.date
         fact["tenure_days"] = [
             max((self.as_of_date - hire).days, 0) for hire in hire_dates
