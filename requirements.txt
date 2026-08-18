@@ -1,0 +1,7 @@
+pandas>=2.0.0
+SQLAlchemy>=2.0.0
+mysql-connector-python>=8.0.0
+python-dotenv>=1.0.0
+Faker>=24.0.0
+streamlit>=1.30.0
+plotly>=5.18.0
